@@ -1,0 +1,42 @@
+#define BLYNK_TEMPLATE_ID "TMPL3BYuVoOmI"
+#define BLYNK_TEMPLATE_NAME "CEILING LIGHTS CONTROL"
+#define BLYNK_AUTH_TOKEN "zre_DTUBAwYgsFjYWCSfHw6wtHFW3dBk"
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+// WiFi credentials
+char ssid[] = "Airtel_Sanjay_Pravin";      // Your WiFi SSID
+char pass[] = "Fantastic@4321";            // Your WiFi Password
+
+// Relay pin mapping (NodeMCU pins → Relay IN pins)
+#define OUTLIGHT_FRONT D0   // GPIO16 → Relay IN1
+#define OUTLIGHT_SIDE  D1   // GPIO5  → Relay IN2
+#define HALL_LIGHT     D2   // GPIO4  → Relay IN3
+#define EXTRA_LIGHT    D3   // GPIO0  → Relay IN4
+
+void setup() {
+  Serial.begin(9600);
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+
+  pinMode(OUTLIGHT_FRONT, OUTPUT);
+  pinMode(OUTLIGHT_SIDE, OUTPUT);
+  pinMode(HALL_LIGHT, OUTPUT);
+  pinMode(EXTRA_LIGHT, OUTPUT);
+
+  // Default OFF
+  digitalWrite(OUTLIGHT_FRONT, LOW);
+  digitalWrite(OUTLIGHT_SIDE, LOW);
+  digitalWrite(HALL_LIGHT, LOW);
+  digitalWrite(EXTRA_LIGHT, LOW);
+}
+
+// Virtual pins from Blynk app
+BLYNK_WRITE(V1) { digitalWrite(OUTLIGHT_FRONT, param.asInt()); }
+BLYNK_WRITE(V2) { digitalWrite(OUTLIGHT_SIDE, param.asInt()); }
+BLYNK_WRITE(V3) { digitalWrite(HALL_LIGHT, param.asInt()); }
+BLYNK_WRITE(V4) { digitalWrite(EXTRA_LIGHT, param.asInt()); }
+
+void loop() {
+  Blynk.run();
+}
